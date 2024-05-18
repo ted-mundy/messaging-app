@@ -1,0 +1,16 @@
+{
+  "folders": [
+    // {
+    //   "path": "./services"
+    // },
+    {
+      "path": "./"
+    }
+  ],
+  "settings": {
+    // in message-service
+    "rust-analyzer.linkedProjects": [
+      "services/message-service/main.rs",
+    ],
+  }
+}
