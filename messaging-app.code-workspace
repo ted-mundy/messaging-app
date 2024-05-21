@@ -10,7 +10,8 @@
   "settings": {
     // in message-service
     "rust-analyzer.linkedProjects": [
-      "services/message-service/main.rs",
+      "./services/message-service/Cargo.toml",
     ],
+    "rust-analyzer.cachePriming.enable": false
   }
 }
