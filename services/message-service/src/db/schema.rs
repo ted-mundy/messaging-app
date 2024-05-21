@@ -1,14 +1,13 @@
-#[macro_use] extern crate diesel;
+// @generated automatically by Diesel CLI.
 
-table! {
+diesel::table! {
     messages (uuid) {
         uuid -> Uuid,
-        /// text, as can be either encrypted or not
         content -> Text,
         created_at -> Timestamp,
         updated_at -> Timestamp,
-        conversation_id -> Unsigned<Bigint>,
-        user_id -> Unsigned<Bigint>,
+        conversation_id -> Int4,
+        user_id -> Int4,
         read_at -> Nullable<Timestamp>,
     }
 }

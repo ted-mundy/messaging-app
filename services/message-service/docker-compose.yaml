@@ -1,0 +1,34 @@
+#
+# Docker compose file to run the message service. Use this when developing
+# other services that depend on the message service (or when developing the
+# message service itself, if you can get development to work with docker).
+#
+
+
+version: '3.0'
+
+services:
+  postgres:
+    image: postgres:16.3-alpine3.19
+    ports:
+      - "${HOST_POSGRES_PORT:-5432}:${POSTGRES_PORT:-5432}"
+    env_file:
+      - .env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - message-service
+    expose:
+      - "${POSTGRES_PORT:-5432}"
+
+
+volumes:
+  postgres-data:
+
+networks:
+  message-service:
+    name: ${NETWORK_NAME:-message-service}
+
+  default:
+    name: ${NETWORK_NAME:-services}
+    external: true
