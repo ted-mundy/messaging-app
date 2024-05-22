@@ -1,4 +1,4 @@
-use diesel::{query_builder::AsQuery, query_dsl::methods::LoadQuery, r2d2::{self, ConnectionManager}, IntoSql};
+use diesel::r2d2::{self, ConnectionManager};
 
 pub mod message_actions;
 pub mod conversation_actions;
