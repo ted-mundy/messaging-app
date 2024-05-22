@@ -1,23 +1,21 @@
-use actix_web::{web, HttpRequest, HttpResponse};
+use actix_web::{web, HttpResponse};
+use diesel::r2d2::{self, ConnectionManager};
 use serde::Deserialize;
 
-// use crate::models::conversation;
+use crate::db::conversation_actions;
 
 #[derive(Deserialize)]
 pub struct ConversationFilter {
   user_id: Option<usize>,
 }
 
-pub async fn get_conversations(_req: HttpRequest, info: web::Query<ConversationFilter>) -> HttpResponse {
-  let user_id: Option<usize> = info.user_id;
+pub async fn get_conversations(info: web::Query<ConversationFilter>, db_pool: web::Data<r2d2::Pool<ConnectionManager<diesel::PgConnection>>>) -> HttpResponse {
+  let db_conn = db_pool.get().unwrap();
 
-  // let r = user_id.and_then(|id| {
-  //   if id == 1 {
-  //     Some("User 1's conversations")
-  //   } else {
-  //     None
-  //   }
-  // }).unwrap_or("No conversations found");
+  let conversations = conversation_actions::get_conversations(db_conn).await;
 
-  HttpResponse::Ok().body("hello")
+  match conversations {
+    Ok(conversations) => HttpResponse::Ok().json(conversations),
+    Err(_) => HttpResponse::InternalServerError().finish(),
+  }
 }

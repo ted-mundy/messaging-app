@@ -1,5 +1,15 @@
-pub mod message_actions;
+use diesel::r2d2::{self, ConnectionManager};
 
-// pub fn create_pool(config: deadpool_postgres::Config) -> deadpool_postgres::Pool {
-//   config.create_pool(tokio_postgres::NoTls).unwrap()
-// }
+pub mod message_actions;
+pub mod conversation_actions;
+pub mod schema;
+
+pub fn create_pool(config: crate::config::AppConfig) -> r2d2::Pool<ConnectionManager<diesel::PgConnection>> {
+  let manager = ConnectionManager::<diesel::PgConnection>::new(config.postgres_url.to_owned());
+  let pool = r2d2::Pool::builder()
+    .max_size(config.max_connections)
+    .build(manager)
+    .expect("Failed to create pool");
+
+  return pool;
+}
