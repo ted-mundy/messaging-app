@@ -1,8 +1,10 @@
-use diesel::{self, r2d2::{ConnectionManager, PooledConnection}, ExpressionMethods, QueryDsl};
+use diesel::{self, insert_into, prelude::Insertable, r2d2::{ConnectionManager, PooledConnection}, ExpressionMethods, QueryDsl, RunQueryDsl};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::{db::pagination::{Paginate, PaginatedResponse}, models::conversation::Conversation};
+
+use super::schema::conversations;
 
 #[derive(Deserialize)]
 pub struct ConversationFilter {
@@ -24,7 +26,7 @@ pub struct GetConversationConfig {
   pub per_page: i64,
 }
 
-pub async fn get_conversations(
+pub async fn get_conversations_from_db(
   mut config: GetConversationConfig,
 ) -> PaginatedResponse<Conversation> {
   use crate::db::schema::conversations::dsl::*;
@@ -45,4 +47,28 @@ pub async fn get_conversations(
     per_page: config.per_page,
     total_items: total,
   }
+}
+
+pub struct CreateConversationConfig {
+  pub db_pool: PooledConnection<ConnectionManager<diesel::PgConnection>>,
+  pub input: CreateConversationInput,
+}
+
+#[derive(Insertable, Deserialize)]
+#[diesel(table_name = conversations)]
+pub struct CreateConversationInput {
+  pub sending_user_uuid: Uuid,
+  pub receiving_user_uuid: Uuid,
+}
+
+pub async fn create_conversation(
+  mut config: CreateConversationConfig,
+) -> Result<Conversation, diesel::result::Error> {
+  use crate::db::schema::conversations::dsl::*;
+
+  let result = insert_into(conversations)
+    .values(&config.input)
+    .get_result(&mut config.db_pool);
+
+  result
 }
