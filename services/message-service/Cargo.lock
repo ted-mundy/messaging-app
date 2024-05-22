@@ -875,6 +875,7 @@ dependencies = [
  "config",
  "diesel",
  "dotenv",
+ "log",
  "serde",
  "sqlite",
  "uuid",

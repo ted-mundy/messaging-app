@@ -1,3 +1,5 @@
+// Stolen from the diesel pagination example :)
+
 use diesel::pg::Pg;
 use diesel::prelude::*;
 use diesel::query_builder::*;

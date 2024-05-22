@@ -11,6 +11,7 @@ chrono = { version = "0.4.38", features = ["serde"] }
 config = "0.14.0"
 diesel = {version = "2.1.6", features = ["uuid", "postgres", "chrono", "r2d2" ]}
 dotenv = "0.15.0"
+log = "0.4.21"
 serde = { version = "1.0.202", features = ["derive"] }
 sqlite = "0.36.0"
 uuid = { version = "1.8.0", features = ["serde", "v4"]}
