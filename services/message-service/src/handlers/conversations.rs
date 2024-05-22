@@ -9,10 +9,9 @@ pub async fn get_conversations(info: web::Query<ConversationFilter>, db_pool: we
   let conversations = conversation_actions::get_conversations(conversation_actions::GetConversationConfig {
     db_pool: db_conn,
     filter: info.into_inner(),
+    page: 1,
+    per_page: 10,
   }).await;
 
-  match conversations {
-    Ok(conversations) => HttpResponse::Ok().json(conversations),
-    Err(_) => HttpResponse::InternalServerError().finish(),
-  }
+  HttpResponse::Ok().json(conversations)
 }
